@@ -1,0 +1,25 @@
+cohort_demographics_path: '/home/shared/yikuan/Mo/demographics.parquet/'
+
+
+data_extraction_params:
+    duration: ['1985-1-1','2016-1-1']
+    predictors: ['medications'] #'Smoking','Alcohol','NYHA_class','HF_subtypes','extract_first_diagnosis_from_yaml','extract_history_diagnosis_from_yaml','lab_tests','medications'
+    first_diagnosis: ['IBD', 'alcoholism', 'any severe bleed except intracranial', 'aortic stenosis', 'atrial fibrillation', 'coronary artery bypass graft', 'diabetes', 'dialysis', 'gout', 'heart valve surgery', 'hypertension', 'ischaemic stroke or transient attack', 'lung disease', 'myocardial infarction', 'pacemaker', 'percutaneous coronary intervention', 'peripheral arterial disease']
+    history_diagnosis: ['Musculoskeletal or connective tissue','malignant cancer','mental or behavioral disorder']
+    lab_tests: 
+        Potassium: {"entity_number":190,"valid_units_codes":{'0':'None','96':'None'},"mesurement_range":None}
+        Haemoglobin: {"entity_number":173,"valid_units_codes":{'56':'None','57':'/10'},"mesurement_range":[5,20]} #entity numbers can be found from the entity table description, codes pertaining do different measurement units could be translated from /TXTFILES/SUM.txt. Different units for the same test should be converted before use. valid_unit_codes list all acceptable measurement units (listed as codes), since the units are different the value of each measurement unit code defines the type of transformation that needs to be carried out for the values to be harmonised. e.g. "entity_number" 173 pertains to Heamoglobin measurement, these values have been recorded with several different units, but most are in grams per deciliter (code 56) and grams per liter (code 57). we select both and define the transformation /10 for 57. Alternatively "valid_units_codes" could be defined as {'56':'*10','57':None} for g/L results. 
+    medications: ["Aldosterone Antagonist","ARB","ACE","BB","Digoxin","Other Diuretics","Antiplatelet","Anticoagulants","Statin"] #use only valid medication as listed in configs/drug_phenoptypes. For generating new drug phenotypes extend the nodebook generate_phenotypes.ipynb
+    
+path_params:
+    predictors_paths: './trial/cohort_predictors' #directory where the extracted predictors will be saved
+    phenotypes_paths: './configs/phenotypes.yaml' #path to some user defined predictors
+    cprd_package_paths: '/home/shared/mo/HFclusters/dependencies/CPRD' #path to the CPRD package
+    java_home: '/usr/lib/jvm/java-8-openjdk-amd64/jre'
+    
+pyspark_params:
+    temp: '/home/shared/mo/HFclusters/dependencies/sparkDeletable'
+    pyspark_env: '/home/mo/anaconda3/envs/cprd/bin/python3.7'
+    
+
+    
